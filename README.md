@@ -19,7 +19,7 @@ Solo he subido las prácticas o partes de prácticas que están hechas por mi.
 
 - **IA**: Soluciones a las prácticas. Profesora Rocío Celeste Romero Zaliz.
 
-- **PDOO**: Prácticas hechas por mi compañero Pablo Rey Pedrosa( Github: [PFeynman](https://github.com/PFeynman) ) y por mí. Profesora Ana Anaya Morito.
+- **PDOO**: Prácticas hechas por mi compañero Pablo Rey Pedrosa( Github: [PFeynman](https://github.com/PFeynman) @PFeynman ) y por mí. Profesora Ana Anaya Morito.
 
 - **SCD**: Soluciones a las prácticas. Profesor Carlos Ureña.
 
