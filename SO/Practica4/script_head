@@ -1,0 +1,7 @@
+#!/bin/bash
+
+head /tmp/listacores > /tmp/listacores_aux
+
+head /tmp/listacores_aux > /tmp/listacores
+
+rm /tmp/listacores_aux
