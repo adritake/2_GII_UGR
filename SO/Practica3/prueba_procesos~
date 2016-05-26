@@ -1,0 +1,13 @@
+#!/bin/bash
+
+#Script para ver la prioridad que tiene cuando se ejecuta
+
+x=0
+
+for i in `seq 0 $1`
+do
+	let x=x+2
+done
+
+echo "El valor de la variable es: $x"
+	
