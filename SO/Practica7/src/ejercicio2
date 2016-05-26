@@ -1,0 +1,17 @@
+Este programa sirve para comprobar los datos compartidos entre un proceso padre y el hijo. Primero se observa cuando ejecutamos el programa esto:
+cualquier mensaje de salida
+
+Mensaje previo a la ejecución de fork
+pid= 4802, global= 7, var= 89
+Mensaje previo a la ejecución de fork
+pid= 4801, global= 6, var= 88
+La primera parte es del hijo y la otra la del padre. El hijo aumenta sus variables y luego las imprime. Como son una copia de las del padre, estas no se ven afectadas y cuando las imprime el padre están tal y como estaban al principio del programa.
+
+Por otro lado se observa que también se imprime el buffer que tenia almacenado (”Mensaje previo a la ejecución del fork”), ya que se comparte el buffer entre padre e hijo. Si descomentamos la parte indicada del programa, ese setvbuffer hace que no se comparta buffer y entonces obtenemos:
+cualquier mensaje de salida
+
+Mensaje previo a la ejecución de fork
+pid= 4811, global= 7, var= 89
+
+pid= 4810, global= 6, var= 88
+
