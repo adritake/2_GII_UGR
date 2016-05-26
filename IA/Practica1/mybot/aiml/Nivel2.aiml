@@ -1,0 +1,1264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml version="2.0">
+
+
+<!-- ******************** PREGUNTA DE INICIO ************************* -->
+<category>
+<pattern> Adivina mi personaje </pattern>
+<template>
+
+    <think>
+        <set name="lista_nombres">Alejandro Alfonso Antonio Cristina Gabriela Ivan Javier Juan Laura Luis Marco Maria Paco Pepe Sofia Sonia</set>
+
+        <!-- Lista para recordar todo las características del personaje por si se trata de engañar-->
+        <set name="lista_propiedades">  . </set>
+    </think>
+
+
+
+
+    Es hombre?
+
+</template>
+</category>
+
+
+
+
+<!-- PRIMERA PREGUNTA (La estructura de esta pregunta es igual a las demás)-->
+<category>
+<pattern> <set>respuesta</set> </pattern>
+<that> Es hombre </that>
+<template>
+
+    <think>
+
+        <!-- Guardo la respuesta en una variable -->
+        <set var="res"> <star/> </set>
+
+        <!-- Establezco una variable contador para iterar por la lista de nombres-->
+        <set var="contador"> 1 </set>
+
+
+        <!-- Variable personaje que tomará el valor de cada personaje de la lista -->
+        <set var="personaje">
+            <srai> ITERATE <get name="lista_nombres"/> </srai>
+        </set>
+
+
+        <condition var="res">
+
+            <!-- En el caso de que sea hombre eliminamos todas las mujeres de la lista -->
+            <li value="si">
+
+                <!-- Se recuerda el genero que es -->
+                <set name="lista_propiedades">
+                    <srai>
+                        ADDITEM es hombre IN <get name="lista_propiedades"/>
+                    </srai>
+                </set>
+
+                <!-- Establezco el topic de hombre porque las preguntas no son las mismas para mujeres y hombres -->
+                <set name="topic"> hombre </set>
+
+                <condition var="personaje">
+
+                    <!-- Condición de salida del bucle; cuando personaje valga end-->
+                    <li value="end"> </li>
+
+                    <li>
+
+                        <!-- Pongo la variable es_mujer segun el valor que tome del map de ese personaje -->
+                        <set var="es_mujer"> <map name="mujer"><get var="personaje"/></map> </set>
+
+                        <condition var="es_mujer">
+
+                            <!-- Si es mujer la elimino-->
+                            <li value="si">
+
+                                <set name="lista_nombres">
+                                    <srai>
+                                        REMOVEITEM <get var="contador"/> IN <get name="lista_nombres"/>
+                                    </srai>
+                                </set>
+
+
+                            </li>
+
+                            <!-- Si no es mujer avanzo el contador -->
+                            <li value="no">
+
+                                <set var="contador">
+                                    <map name="successor"><get var="contador"/></map>
+                                </set>
+
+                            </li>
+
+                        </condition>
+
+
+                        <!-- Avanzo al siguiente personaje -->
+                        <set var="personaje">
+                            <srai>NEXT</srai>
+                        </set>
+
+                        <loop/>
+
+                    </li>
+
+                </condition>
+
+            </li>
+
+            <!-- Caso en el que es mujer, se repite el proceso para hombre pero para las mujeres-->
+            <li value="no">
+
+
+                <set name="lista_propiedades">
+                    <srai>
+                        ADDITEM es mujer IN <get name="lista_propiedades"/>
+                    </srai>
+                </set>
+
+                <set name="topic"> mujer </set>
+
+                <condition var="personaje">
+                    <li value="end"> </li>
+
+                    <li>
+
+                        <set var="es_mujer"> <map name="mujer"><get var="personaje"/></map> </set>
+
+                        <condition var="es_mujer">
+
+                            <li value="no">
+
+                                <set name="lista_nombres">
+                                    <srai>
+                                        REMOVEITEM <get var="contador"/> IN <get name="lista_nombres"/>
+                                    </srai>
+                                </set>
+
+
+
+
+                            </li>
+
+                            <li value="si">
+
+                                <set var="contador">
+                                    <map name="successor"><get var="contador"/></map>
+                                </set>
+
+                            </li>
+
+                        </condition>
+
+
+
+                        <set var="personaje">
+                            <srai>NEXT</srai>
+                        </set>
+
+                        <loop/>
+
+                    </li>
+
+                </condition>
+
+            </li>
+
+        </condition>
+
+    </think>
+
+
+    <!-- Una vez eliminados los personajes se hace una nueva pregunta-->
+    Tiene la piel clara?
+
+
+</template>
+</category>
+
+
+
+<!-- SEGUNDA PREGUNTA, se procede igual que en la primera pero ya se comprueba si se ha acertado el personaje-->
+<category>
+<pattern>  <set>respuesta</set>    </pattern>
+<that> Tiene la piel clara </that>
+<template>
+
+    <think>
+
+
+        <set var="res"> <star/> </set>
+
+        <set var="contador"> 1 </set>
+
+
+
+        <set var="personaje">
+            <srai> ITERATE <get name="lista_nombres"/> </srai>
+        </set>
+
+
+        <condition var="res">
+
+            <li value="si">
+
+                <set name="lista_propiedades">
+                    <srai>
+                        ADDITEM tiene la piel clara, IN <get name="lista_propiedades"/>
+                    </srai>
+                </set>
+
+
+
+
+                <condition var="personaje">
+                    <li value="end"> </li>
+
+                    <li>
+
+                        <set var="piel_clara"> <map name="pielclara"><get var="personaje"/></map> </set>
+
+                        <condition var="piel_clara">
+
+                            <li value="no">
+
+                                <set name="lista_nombres">
+                                    <srai>
+                                        REMOVEITEM <get var="contador"/> IN <get name="lista_nombres"/>
+                                    </srai>
+                                </set>
+
+
+
+
+                            </li>
+
+                            <li value="si">
+
+                                <set var="contador">
+                                    <map name="successor"><get var="contador"/></map>
+                                </set>
+
+                            </li>
+
+                        </condition>
+
+
+
+                        <set var="personaje">
+                            <srai>NEXT</srai>
+                        </set>
+
+                        <loop/>
+
+                    </li>
+
+                </condition>
+
+            </li>
+
+            <li value="no">
+
+                <set name="lista_propiedades">
+                    <srai>
+                        ADDITEM tiene la piel oscura, IN <get name="lista_propiedades"/>
+                    </srai>
+                </set>
+
+                <condition var="personaje">
+                    <li value="end"> </li>
+
+                    <li>
+
+                        <set var="piel_clara"> <map name="pielclara"><get var="personaje"/></map> </set>
+
+                        <condition var="piel_clara">
+
+                            <li value="si">
+
+                                <set name="lista_nombres">
+                                    <srai>
+                                        REMOVEITEM <get var="contador"/> IN <get name="lista_nombres"/>
+                                    </srai>
+                                </set>
+
+
+
+
+                            </li>
+
+                            <li value="no">
+
+                                <set var="contador">
+                                    <map name="successor"><get var="contador"/></map>
+                                </set>
+
+                            </li>
+
+                        </condition>
+
+
+
+                        <set var="personaje">
+                            <srai>NEXT</srai>
+                        </set>
+
+                        <loop/>
+
+                    </li>
+
+                </condition>
+
+            </li>
+
+        </condition>
+
+        <set var="n_personajes">
+            <srai>COUNT <get name="lista_nombres"/> </srai>
+        </set>
+
+    </think>
+
+    <!-- Se comprueba si el tamaño de la lista es 1, lo que quiere decir que se ha acertado el personaje -->
+    <condition var="n_personajes">
+
+        <!-- Si solo queda uno se dice su nombre-->
+        <li value="1"> Tu personaje es <get name="lista_nombres"/></li>
+
+        <!-- Si quedan mas se hace otra pregunta-->
+        <li>Tiene los ojos claros?</li>
+
+
+    </condition>
+
+</template>
+
+</category>
+
+
+<!-- TERCERA PREGUNTA, Se procede igual que en las anteriores solo que se abren dos ramas de preguntas dependiendo de si es hombre o mujer-->
+<category>
+<pattern> <set>respuesta</set> </pattern>
+<that> tiene los ojos claros </that>
+<template>
+
+    <think>
+
+
+        <set var="res"> <star/> </set>
+
+        <set var="contador"> 1 </set>
+
+
+
+        <set var="personaje">
+            <srai> ITERATE <get name="lista_nombres"/> </srai>
+        </set>
+
+
+        <condition var="res">
+
+            <li value="si">
+
+                <set name="lista_propiedades">
+                    <srai>
+                        ADDITEM tiene los ojos claros, IN <get name="lista_propiedades"/>
+                    </srai>
+                </set>
+
+                <!-- Variable global para preguntar sobre las mujeres-->
+                <set name="tiene_ojos_claros">si</set>
+
+                <condition var="personaje">
+                    <li value="end"> </li>
+
+                    <li>
+
+                        <set var="ojos_oscuros"> <map name="ojososcuros"><get var="personaje"/></map> </set>
+
+                        <condition var="ojos_oscuros">
+
+                            <li value="si">
+
+                                <set name="lista_nombres">
+                                    <srai>
+                                        REMOVEITEM <get var="contador"/> IN <get name="lista_nombres"/>
+                                    </srai>
+                                </set>
+
+
+
+
+                            </li>
+
+                            <li value="no">
+
+                                <set var="contador">
+                                    <map name="successor"><get var="contador"/></map>
+                                </set>
+
+                            </li>
+
+                        </condition>
+
+
+
+                        <set var="personaje">
+                            <srai>NEXT</srai>
+                        </set>
+
+                        <loop/>
+
+                    </li>
+
+                </condition>
+
+            </li>
+
+            <li value="no">
+
+                <set name="lista_propiedades">
+                    <srai>
+                        ADDITEM tiene los ojos oscuros, IN <get name="lista_propiedades"/>
+                    </srai>
+                </set>
+
+
+                <set name="tiene_ojos_claros">no</set>
+
+                <condition var="personaje">
+                    <li value="end"> </li>
+
+                    <li>
+
+                        <set var="ojos_oscuros"> <map name="ojososcuros"><get var="personaje"/></map> </set>
+
+                        <condition var="ojos_oscuros">
+
+                            <li value="no">
+
+                                <set name="lista_nombres">
+                                    <srai>
+                                        REMOVEITEM <get var="contador"/> IN <get name="lista_nombres"/>
+                                    </srai>
+                                </set>
+
+
+
+
+                            </li>
+
+                            <li value="si">
+
+                                <set var="contador">
+                                    <map name="successor"><get var="contador"/></map>
+                                </set>
+
+                            </li>
+
+                        </condition>
+
+
+
+                        <set var="personaje">
+                            <srai>NEXT</srai>
+                        </set>
+
+                        <loop/>
+
+                    </li>
+
+                </condition>
+
+            </li>
+
+        </condition>
+
+    </think>
+
+
+    <!-- Según si es un hombre o mujer hacemos una pregunta u otra-->
+    <condition name="topic">
+
+        <!-- Si es hombre se pregunta esto -->
+        <li value="hombre"> Tiene barba?</li>
+        <li value="mujer">
+            <!-- El caso de las mujeres es distinto porque solo se diferencian en los ojos y en el pelo.
+                 En lugar de eliminar elementos de una lista preguntamos según su color de ojos-->
+            <condition name="tiene_ojos_claros">
+                <li value="si"> Es rubia? </li>
+                <li value="no"> Es pelirroja? </li>
+            </condition>
+
+        </li>
+    </condition>
+
+</template>
+</category>
+
+
+
+
+<!-- CUARTA PREGUNTA SOBRE LOS HOMBRES-->
+<category>
+<pattern> <set>respuesta</set> </pattern>
+<that> Tiene barba </that>
+<template>
+
+    <think>
+
+
+        <set var="res"> <star/> </set>
+
+        <set var="contador"> 1 </set>
+
+
+        <set var="personaje">
+            <srai> ITERATE <get name="lista_nombres"/> </srai>
+        </set>
+
+
+        <condition var="res">
+
+
+            <li value="si">
+
+
+                <set name="lista_propiedades">
+                    <srai>
+                        ADDITEM tiene barba, IN <get name="lista_propiedades"/>
+                    </srai>
+                </set>
+
+
+                <condition var="personaje">
+                    <li value="end"> </li>
+
+                    <li>
+
+                        <set var="tiene_barba"> <map name="barba"><get var="personaje"/></map> </set>
+
+                        <condition var="tiene_barba">
+
+                            <li value="no">
+
+                                <set name="lista_nombres">
+                                    <srai>
+                                        REMOVEITEM <get var="contador"/> IN <get name="lista_nombres"/>
+                                    </srai>
+                                </set>
+
+
+
+
+                            </li>
+
+                            <li value="si">
+
+                                <set var="contador">
+                                    <map name="successor"><get var="contador"/></map>
+                                </set>
+
+                            </li>
+
+                        </condition>
+
+
+
+                        <set var="personaje">
+                            <srai>NEXT</srai>
+                        </set>
+
+                        <loop/>
+
+                    </li>
+
+                </condition>
+
+            </li>
+
+            <li value="no">
+
+
+                <set name="lista_propiedades">
+                    <srai>
+                        ADDITEM no tiene barba, IN <get name="lista_propiedades"/>
+                    </srai>
+                </set>
+
+                <condition var="personaje">
+                    <li value="end"> </li>
+
+                    <li>
+
+                        <set var="tiene_barba"> <map name="barba"><get var="personaje"/></map> </set>
+
+                        <condition var="tiene_barba">
+
+                            <li value="si">
+
+                                <set name="lista_nombres">
+                                    <srai>
+                                        REMOVEITEM <get var="contador"/> IN <get name="lista_nombres"/>
+                                    </srai>
+                                </set>
+
+
+
+
+                            </li>
+
+                            <li value="no">
+
+                                <set var="contador">
+                                    <map name="successor"><get var="contador"/></map>
+                                </set>
+
+                            </li>
+
+                        </condition>
+
+
+
+                        <set var="personaje">
+                            <srai>NEXT</srai>
+                        </set>
+
+                        <loop/>
+
+                    </li>
+
+                </condition>
+
+            </li>
+
+        </condition>
+
+        <set var="n_personajes">
+            <srai>COUNT <get name="lista_nombres"/> </srai>
+        </set>
+
+    </think>
+
+    <condition var="n_personajes">
+
+        <li value="1"> Tu personaje es <get name="lista_nombres"/> </li>
+        <li> Es moreno? </li>
+
+    </condition>
+
+
+
+
+</template>
+</category>
+
+<!-- QUINTA PREGUNTA SOBRE LOS HOMBRES-->
+<category>
+<pattern> <set>respuesta</set> </pattern>
+<that> Es moreno </that>
+<template>
+
+    <think>
+
+
+        <set var="res"> <star/> </set>
+
+        <set var="contador"> 1 </set>
+
+
+        <set var="personaje">
+            <srai> ITERATE <get name="lista_nombres"/> </srai>
+        </set>
+
+
+        <condition var="res">
+
+
+
+            <li value="si">
+
+
+                <set name="lista_propiedades">
+                    <srai>
+                        ADDITEM tiene el pelo moreno, IN <get name="lista_propiedades"/>
+                    </srai>
+                </set>
+
+                <condition var="personaje">
+                    <li value="end"> </li>
+
+                    <li>
+
+                        <set var="pelo_moreno"> <map name="pelomoreno"><get var="personaje"/></map> </set>
+
+                        <condition var="pelo_moreno">
+
+                            <li value="no">
+
+                                <set name="lista_nombres">
+                                    <srai>
+                                        REMOVEITEM <get var="contador"/> IN <get name="lista_nombres"/>
+                                    </srai>
+                                </set>
+
+
+
+
+                            </li>
+
+                            <li value="si">
+
+                                <set var="contador">
+                                    <map name="successor"><get var="contador"/></map>
+                                </set>
+
+                            </li>
+
+                        </condition>
+
+
+
+                        <set var="personaje">
+                            <srai>NEXT</srai>
+                        </set>
+
+                        <loop/>
+
+                    </li>
+
+                </condition>
+
+            </li>
+
+            <li value="no">
+
+                <set name="lista_propiedades">
+                    <srai>
+                        ADDITEM no tiene el pelo moreno, IN <get name="lista_propiedades"/>
+                    </srai>
+                </set>
+
+                <condition var="personaje">
+                    <li value="end"> </li>
+
+                    <li>
+
+                        <set var="pelo_moreno"> <map name="pelomoreno"><get var="personaje"/></map> </set>
+
+                        <condition var="pelo_moreno">
+
+                            <li value="si">
+
+                                <set name="lista_nombres">
+                                    <srai>
+                                        REMOVEITEM <get var="contador"/> IN <get name="lista_nombres"/>
+                                    </srai>
+                                </set>
+
+
+
+
+                            </li>
+
+                            <li value="no">
+
+                                <set var="contador">
+                                    <map name="successor"><get var="contador"/></map>
+                                </set>
+
+                            </li>
+
+                        </condition>
+
+
+
+                        <set var="personaje">
+                            <srai>NEXT</srai>
+                        </set>
+
+                        <loop/>
+
+                    </li>
+
+                </condition>
+
+            </li>
+
+        </condition>
+
+        <set var="n_personajes">
+            <srai>COUNT <get name="lista_nombres"/> </srai>
+        </set>
+
+    </think>
+
+    <condition var="n_personajes">
+
+        <li value="1"> Tu personaje es <get name="lista_nombres"/> </li>
+        <li> Tiene bigote? </li>
+
+    </condition>
+
+</template>
+</category>
+
+
+
+
+<!-- SEXTA PREGUNTA SOBRE LOS HOMBRES-->
+<category>
+<pattern> <set>respuesta</set> </pattern>
+<that> Tiene bigote </that>
+<template>
+
+    <think>
+
+
+        <set var="res"> <star/> </set>
+
+        <set var="contador"> 1 </set>
+
+
+        <set var="personaje">
+            <srai> ITERATE <get name="lista_nombres"/> </srai>
+        </set>
+
+
+        <condition var="res">
+
+
+
+            <li value="si">
+
+
+                <set name="lista_propiedades">
+                    <srai>
+                        ADDITEM tiene bigote, IN <get name="lista_propiedades"/>
+                    </srai>
+                </set>
+
+
+                <condition var="personaje">
+                    <li value="end"> </li>
+
+                    <li>
+
+                        <set var="tiene_bigote"> <map name="bigote"><get var="personaje"/></map> </set>
+
+                        <condition var="tiene_bigote">
+
+                            <li value="no">
+
+                                <set name="lista_nombres">
+                                    <srai>
+                                        REMOVEITEM <get var="contador"/> IN <get name="lista_nombres"/>
+                                    </srai>
+                                </set>
+
+
+
+
+                            </li>
+
+                            <li value="si">
+
+                                <set var="contador">
+                                    <map name="successor"><get var="contador"/></map>
+                                </set>
+
+                            </li>
+
+                        </condition>
+
+
+
+                        <set var="personaje">
+                            <srai>NEXT</srai>
+                        </set>
+
+                        <loop/>
+
+                    </li>
+
+                </condition>
+
+            </li>
+
+            <li value="no">
+
+                <set name="lista_propiedades">
+                    <srai>
+                        ADDITEM no tiene bigote, IN <get name="lista_propiedades"/>
+                    </srai>
+                </set>
+
+                <condition var="personaje">
+                    <li value="end"> </li>
+
+                    <li>
+
+                        <set var="tiene_bigote"> <map name="bigote"><get var="personaje"/></map> </set>
+
+                        <condition var="tiene_bigote">
+
+                            <li value="si">
+
+                                <set name="lista_nombres">
+                                    <srai>
+                                        REMOVEITEM <get var="contador"/> IN <get name="lista_nombres"/>
+                                    </srai>
+                                </set>
+
+
+
+
+                            </li>
+
+                            <li value="no">
+
+                                <set var="contador">
+                                    <map name="successor"><get var="contador"/></map>
+                                </set>
+
+                            </li>
+
+                        </condition>
+
+
+
+                        <set var="personaje">
+                            <srai>NEXT</srai>
+                        </set>
+
+                        <loop/>
+
+                    </li>
+
+                </condition>
+
+            </li>
+
+        </condition>
+
+        <set var="n_personajes">
+            <srai>COUNT <get name="lista_nombres"/> </srai>
+        </set>
+
+    </think>
+
+    <condition var="n_personajes">
+
+        <li value="1"> Tu personaje es <get name="lista_nombres"/> </li>
+        <li> Es rubio? </li>
+
+    </condition>
+
+
+
+
+</template>
+</category>
+
+
+<!-- SEPTIMA PREGUNTA SOBRE LOS HOMBRES -->
+<category>
+<pattern> <set>respuesta</set> </pattern>
+<that> Es rubio </that>
+<template>
+
+    <think>
+
+
+        <set var="res"> <star/> </set>
+
+        <set var="contador"> 1 </set>
+
+
+        <set var="personaje">
+            <srai> ITERATE <get name="lista_nombres"/> </srai>
+        </set>
+
+
+        <condition var="res">
+
+            <li value="si">
+
+                <set name="lista_propiedades">
+                    <srai>
+                        ADDITEM tiene el pelo rubio, IN <get name="lista_propiedades"/>
+                    </srai>
+                </set>
+
+
+                <condition var="personaje">
+                    <li value="end"> </li>
+
+                    <li>
+
+                        <set var="pelo_rubio"> <map name="pelorubio"><get var="personaje"/></map> </set>
+
+                        <condition var="pelo_rubio">
+
+                            <li value="no">
+
+                                <set name="lista_nombres">
+                                    <srai>
+                                        REMOVEITEM <get var="contador"/> IN <get name="lista_nombres"/>
+                                    </srai>
+                                </set>
+
+
+
+
+                            </li>
+
+                            <li value="si">
+
+                                <set var="contador">
+                                    <map name="successor"><get var="contador"/></map>
+                                </set>
+
+                            </li>
+
+                        </condition>
+
+
+
+                        <set var="personaje">
+                            <srai>NEXT</srai>
+                        </set>
+
+                        <loop/>
+
+                    </li>
+
+                </condition>
+
+            </li>
+
+            <li value="no">
+
+                <set name="lista_propiedades">
+                    <srai>
+                        ADDITEM no tiene el pelo rubio, IN <get name="lista_propiedades"/>
+                    </srai>
+                </set>
+
+                <condition var="personaje">
+                    <li value="end"> </li>
+
+                    <li>
+
+                        <set var="pelo_rubio"> <map name="pelorubio"><get var="personaje"/></map> </set>
+
+                        <condition var="pelo_rubio">
+
+                            <li value="si">
+
+                                <set name="lista_nombres">
+                                    <srai>
+                                        REMOVEITEM <get var="contador"/> IN <get name="lista_nombres"/>
+                                    </srai>
+                                </set>
+
+
+
+
+                            </li>
+
+                            <li value="no">
+
+                                <set var="contador">
+                                    <map name="successor"><get var="contador"/></map>
+                                </set>
+
+                            </li>
+
+                        </condition>
+
+
+
+                        <set var="personaje">
+                            <srai>NEXT</srai>
+                        </set>
+
+                        <loop/>
+
+                    </li>
+
+                </condition>
+
+            </li>
+
+        </condition>
+
+        <set var="n_personajes">
+            <srai>COUNT <get name="lista_nombres"/> </srai>
+        </set>
+
+    </think>
+
+    <condition var="n_personajes">
+
+        <li value="1"> Tu personaje es <get name="lista_nombres"/> </li>
+        <li> Lista reducida a <get name="lista_nombres"/> </li>
+
+    </condition>
+
+
+
+
+</template>
+</category>
+
+
+<!-- CUARTA PREGUNTA SOBRE LAS MUJERES CON OJOS CLAROS-->
+<category>
+<pattern> <set>respuesta</set> </pattern>
+<that> Es rubia </that>
+<template>
+
+    <think>
+        <set var="res"><star/></set>
+    </think>
+
+    <condition var="res">
+        <li value="si"> Tu personaje es Laura
+            <think>
+
+                <set name="lista_propiedades">
+                    <srai>
+                        ADDITEM tiene el pelo rubio, IN <get name="lista_propiedades"/>
+                    </srai>
+                </set>
+
+            </think>
+        </li>
+        <li value ="no"> Es morena? </li>
+    </condition>
+
+</template>
+</category>
+
+
+<!-- QUINTA PREGUNTA SOBRE LAS MUJERES CON OJOS CLAROS -->
+<category>
+<pattern> <set>respuesta</set> </pattern>
+<that> Es morena </that>
+<template>
+
+    <think>
+        <set var="res"><star/></set>
+    </think>
+
+    <condition var="res">
+        <li value="si"> Tu personaje es Cristina
+
+            <think>
+
+                <set name="lista_propiedades">
+                    <srai>
+                        ADDITEM tiene el pelo moreno, IN <get name="lista_propiedades"/>
+                    </srai>
+                </set>
+
+            </think>
+
+        </li>
+        <li value ="no"> Tu personaje es Gabriela
+
+            <think>
+
+                <set name="lista_propiedades">
+                    <srai>
+                        ADDITEM no tiene el pelo moreno, IN <get name="lista_propiedades"/>
+                    </srai>
+                </set>
+
+            </think>
+
+        </li>
+
+    </condition>
+
+</template>
+</category>
+
+
+<!-- CUARTA PREGUNTA SOBRE LAS MUJERES CON OJOS OSCUROS-->
+<category>
+<pattern> <set>respuesta</set> </pattern>
+<that> Es pelirroja </that>
+<template>
+
+    <think>
+        <set var="res"><star/></set>
+    </think>
+
+    <condition var="res">
+        <li value="si"> Tu personaje es Maria
+
+            <think>
+
+                <set name="lista_propiedades">
+                    <srai>
+                        ADDITEM tiene el pelo pelirrojo, IN <get name="lista_propiedades"/>
+                    </srai>
+                </set>
+
+            </think>
+
+        </li>
+        <li value ="no"> Tu personaje es Sofia
+
+            <think>
+
+                <set name="lista_propiedades">
+                    <srai>
+                        ADDITEM no tiene el pelo pelirrojo, IN <get name="lista_propiedades"/>
+                    </srai>
+                </set>
+
+            </think>
+
+        </li>
+    </condition>
+
+</template>
+</category>
+
+
+
+
+<!-- PREGUNTA DE LA VICTORIA-->
+
+
+<category>
+<pattern> Has ganado </pattern>
+<template>
+
+    ¿Lo dudabas?
+
+</template>
+</category>
+
+
+
+<!-- PREGUNTA DEL ENGAÑO -->
+<category>
+<pattern> Te has equivocado </pattern>
+<template>
+
+    ¡Eso es imposible! me dijiste que <get name="lista_propiedades"/> Y el único personaje posible con esas características es <get name="lista_nombres"/>
+
+</template>
+</category>
+
+
+
+</aiml>

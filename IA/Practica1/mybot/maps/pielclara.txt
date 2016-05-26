@@ -1,0 +1,16 @@
+Alejandro:No
+Alfonso:Si
+Antonio:No
+Cristina:Si
+Gabriela:Si
+Ivan:Si
+Javier:No
+Juan:No
+Laura:Si
+Luis:Si
+Marco:Si
+Maria:Si
+Paco:Si
+Pepe:Si
+Sofia:Si
+Sonia:No

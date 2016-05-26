@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml version="2.0">
+
+<!-- ******************** PREGUNTA DE INICIO ************************* -->
+<category>
+<pattern> Quiero jugar a un juego </pattern>
+<template>
+
+    <think>
+        <set name="lista_nombres">Alejandro Alfonso Antonio Cristina Gabriela Ivan Javier Laura Luis Marco Maria Paco Pepe Sofia Sonia</set>
+        <set var="lista"> <get name="lista_nombres"/> </set>
+        <set var="cantidad"><srai>COUNT <get var="lista"/></srai></set>
+        <set var="pos"><srai>RANDOM <get var="cantidad"/></srai></set>
+        <set name="personaje">
+            <srai>
+                SELECTITEM <get var="pos"/> IN <get var="lista"/>
+            </srai>
+        </set>
+
+
+    </think>
+
+
+
+
+    Vale! Preguntame algo.
+
+</template>
+</category>
+
+
+<!-- ******************** PREGUNTA PARA HACER TRAMPA ************************* -->
+<category>
+<pattern> A quien has elegido </pattern>
+<template>    He elegido a <get name="personaje"/>      </template>
+</category>
+
+
+
+<!-- ******************** PREGUNTA DEL PELO ************************* -->
+<category>
+<pattern> Tiene el pelo <set>colorpelo</set> </pattern>
+<template>
+
+    <think>
+        <set var="color"> <star/> </set>
+    </think>
+
+    <condition var="color">
+        <li value="blanco"> <map name="peloblanco"><get name="personaje"/></map> </li>
+        <li value="moreno"> <map name="pelomoreno"><get name="personaje"/></map> </li>
+        <li value="rubio"> <map name="pelorubio"><get name="personaje"/></map> </li>
+        <li value="calvo"> <map name="pelocalvo"><get name="personaje"/></map> </li>
+        <li value="pelirrojo"> <map name="pelopelirrojo"><get name="personaje"/></map> </li>
+        <li value="marron"> <map name="pelomarron"><get name="personaje"/></map> </li>
+    </condition>
+
+
+</template>
+</category>
+
+
+<!-- ******************** PREGUNTA DE LOS OJOS ************************* -->
+<category>
+<pattern> Tiene los ojos <set>colorojos</set></pattern>
+<template>
+
+    <think>
+        <set var="color"> <star/> </set>
+    </think>
+
+    <condition var="color">
+        <li value="oscuros"> <map name="ojososcuros"><get name="personaje"/></map> </li>
+        <li value="claros"> <map name="ojosclaros"><get name="personaje"/></map> </li>
+    </condition>
+
+
+</template>
+</category>
+
+
+<!-- ******************** PREGUNTA DE LA PIEL ************************* -->
+<category>
+<pattern> Tiene la piel <set>colorpiel</set></pattern>
+<template>
+
+    <think>
+        <set var="color"> <star/> </set>
+    </think>
+
+    <condition var="color">
+        <li value="clara"> <map name="pielclara"><get name="personaje"/></map> </li>
+        <li value="oscura"> <map name="pieloscura"><get name="personaje"/></map> </li>
+    </condition>
+
+
+</template>
+</category>
+
+
+<!-- ******************** PREGUNTA DE LAS GAFAS************************* -->
+<category>
+<pattern> Tiene gafas</pattern>
+<template>
+
+
+     <map name="gafas"><get name="personaje"/></map>
+
+
+</template>
+</category>
+
+
+
+<!-- ******************** PREGUNTA DEL BIGOTE ************************* -->
+<category>
+<pattern> Tiene bigote </pattern>
+<template>
+
+
+     <map name="bigote"><get name="personaje"/></map>
+
+
+</template>
+</category>
+
+
+<!-- ******************** PREGUNTA DE LA BARBA ************************* -->
+<category>
+<pattern> Tiene barba </pattern>
+<template>
+
+
+     <map name="barba"><get name="personaje"/></map>
+
+
+</template>
+</category>
+
+
+<!-- ******************** PREGUNTA DEL GENERO************************* -->
+<category>
+<pattern> Es <set>genero</set> </pattern>
+<template>
+
+
+    <think>
+        <set var="genero"> <star/> </set>
+    </think>
+
+    <condition var="genero">
+        <li value="hombre"> <map name="hombre"><get name="personaje"/></map> </li>
+        <li value="mujer"> <map name="mujer"><get name="personaje"/></map> </li>
+    </condition>
+
+</template>
+</category>
+
+
+<!-- ******************** INTENTO DE RESPONDER  ************************* -->
+<category>
+<pattern> Es <set>personajes</set> </pattern>
+<template>
+
+    <think>
+        <set var="correcto">
+            <srai>FINDITEM <star/> IN <get name="personaje"/></srai>
+        </set>
+    </think>
+
+    <condition var="correcto">
+        <li value="1"> Si, ¡Has ganado! </li>
+        <li value="0"> No, intentalo otra vez. </li>
+
+    </condition>
+
+
+</template>
+</category>
+
+
+
+</aiml>

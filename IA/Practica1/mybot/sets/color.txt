@@ -1,0 +1,7 @@
+rojo
+amarillo
+verde
+azul
+rosa
+roranja
+marron
