@@ -1,0 +1,4 @@
+#!/bin/bash
+
+ find /home -atime 10 > /home/log_archivos
+
