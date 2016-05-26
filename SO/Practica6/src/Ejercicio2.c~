@@ -1,0 +1,15 @@
+#include<unistd.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<sys/types.h>
+#include<sys/stat.h>
+#include<fcntl.h>
+#include<errno.h>
+
+int main( int argc, char *argv[] ){
+
+	if( argc != 3 )
+		printf("\nUso: Ejercicio2 <directorio> <nº octal de 4 digitos>");
+
+	exit(0);
+}	
