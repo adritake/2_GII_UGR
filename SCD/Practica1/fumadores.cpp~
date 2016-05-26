@@ -1,0 +1,150 @@
+#include <iostream>
+#include <cassert>
+#include <pthread.h>
+#include <semaphore.h>
+#include <time.h>      // incluye "time(....)"
+#include <unistd.h>    // incluye "usleep(...)"
+#include <stdlib.h>    // incluye "rand(...)" y "srand"
+
+using namespace std;
+
+const int FUMADORES = 3;
+
+//Creación de semáforos
+sem_t puede_fabricar;
+sem_init( &(puede_fabricar),0,1);
+
+sem_t puede_fumar[FUMADORES];
+
+for( unsigned long i = 0 ; i < FUMADORES ; i++ ){
+        	
+	sem_init( &(puede_fumar[i]), 0, 0 );
+}
+
+
+
+
+/* 
+   Al fumador 0 le falta tabaco, 
+   al fumador 1 le falta papel y
+   al fumador 2 le falta cerillas
+
+*/
+
+
+// ----------------------------------------------------------------------------
+// función que simula la acción de fumar  como un retardo aleatorio de la hebra
+
+void fumar( void * ih_void) { 
+	
+
+	//  inicializa la semilla aleatoria  (solo la primera vez)
+	static bool primera_vez = true ;
+	if ( primera_vez )
+	{   primera_vez = false ;
+	   srand( time(NULL) );    
+	}
+	   
+	while (true){   
+		
+		if( ih_void == 0 ){
+			
+			cout<<"El fumador 1 esta esperando el tabaco."<<endl;
+			sem_wait( puede_fumar[0] );
+			cout<<"El fumador 1 ha recibido el tabaco."<<endl;
+		}	
+		else if( ih_void == 1 ){
+			
+			cout<<"El fumador 2 esta esperando el papel."<<endl;
+			sem_wait( puede_fumar[1] );
+			cout<<"El fumador 2 ha recibido el papel."<<endl;
+		}
+		else if ( ih_void == 2){
+
+			cout<<"El fumador 3 esta esperando las cerillas."<<endl;
+			sem_wait( puede_fumar[2] );
+			cout<<"El fumador 3 ha recibido las cerillas."<<endl;
+		}
+			
+		// calcular un numero aleatorio de milisegundos (entre 1/10 y 2 segundos)
+		const unsigned miliseg = 100U + (rand() % 1900U) ; 
+
+		// retraso bloqueado durante 'miliseg' milisegundos
+		cout<<"El fumador "<< ih_void << " ha comenzado a fumar."<<endl;
+		usleep( 1000U*miliseg );
+		cout<<"El fumador "<< ih_void << " ha terminado de fumar."<<endl;
+		
+		sem_signal( puede_fabricar );
+
+	} 
+}
+
+
+//Los ingredientes se corresponden con 0="tabaco", 1="papel", 2="cerillas"
+
+void estanquero(){
+
+	while(true){
+		
+		sem_wait( puede_fabricar );
+		int ing = rand%()2;
+		ingredientes ingre;
+
+		if(ing==0){
+			
+			sem_signal( puede_fumar[0] );
+			cout<<"El estanquero ha producido tabaco."<<endl;
+		}
+		else if (ing ==1){
+
+			sem_signal( puede_fumar[1] );
+			cout<<"El estanquero ha producido papel."<<endl;
+		}
+		else if (ing == 2){
+
+			sem_signal( puede_fumar[2] );
+			cout<<"El estanquero ha producido cerillas."<<endl;
+		}
+	}
+
+}
+
+	
+
+int main(){
+  
+	pthread_t hebra[FUMADORES]
+  	
+	pthread_t estanquero;
+
+	pthread_create( &estanquero, NULL, estanquero(), NULL);
+
+	for( unsigned long i = 0 ; i < n ; i++ ){
+        	void * arg_ptr = (void *) i ;
+        	pthread_create( &(hebra[i]), NULL, fumar, arg_ptr );
+    	}
+
+	return 0 ;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

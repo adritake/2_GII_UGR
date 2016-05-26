@@ -1,0 +1,168 @@
+
+import monitor.* ;
+
+class Estanco extends AbstractMonitor{
+
+
+    private Condition puede_recoger_0 = makeCondition();
+    private Condition puede_recoger_1 = makeCondition();
+    private Condition puede_recoger_2 = makeCondition();
+    private Condition puede_fabricar = makeCondition();
+
+    // invocado por cada fumador, indicando su ingrediente o numero
+    public void obtenerIngrediente( int miIngrediente ){
+
+        enter();
+
+        puede_fabricar.signal();
+        if( miIngrediente == 0 ){
+            puede_recoger_0.await();
+        }
+        else if( miIngrediente == 1 ){
+            puede_recoger_1.await();
+        }
+        else if( miIngrediente == 2 ){
+            puede_recoger_2.await();
+        }
+
+
+        leave();
+
+    }
+
+
+
+    // invocado por el estanquero, indicando el ingrediente que pone
+    public void ponerIngrediente( int ingrediente ){
+
+
+
+        enter();
+        if( ingrediente == 0 ){
+            puede_recoger_0.signal();
+        }
+        else if( ingrediente == 1 ){
+            puede_recoger_1.signal();
+        }
+        else if( ingrediente == 2 ){
+            puede_recoger_2.signal();
+        }
+        leave();
+
+    }
+
+
+
+    // invocado por el estanquero
+    public void esperarRecogidaIngrediente(){
+        enter();
+        puede_fabricar.await();
+        leave();
+    }
+
+}
+
+/*
+Al fumador 0 le falta tabaco,
+al fumador 1 le falta papel y
+al fumador 2 le falta cerillas
+*/
+
+class Fumador implements Runnable{
+
+    private int miIngrediente;
+    String ingre;
+    public Thread thr ;
+    public Estanco estanco;
+
+    public Fumador( int p_miIngrediente, String nombre, Estanco es  ){
+
+        miIngrediente = p_miIngrediente;
+        thr = new Thread(this, nombre);
+        estanco = es;
+
+        if( p_miIngrediente == 0)
+            ingre = "tabaco";
+        else if( p_miIngrediente == 1)
+            ingre = "papel";
+        else if( p_miIngrediente == 2)
+            ingre = "cerillas";
+
+    }
+
+    public void run(){
+        while ( true ){
+
+             System.out.println("El fumador "+ miIngrediente +" esta esperando " + ingre );
+             estanco.obtenerIngrediente( miIngrediente );
+             System.out.println("El fumador "+ miIngrediente +" ha recibdo " + ingre );
+
+             System.out.println("El fumador "+ miIngrediente +" ha comenzado a fumar.");
+             aux.dormir_max( 2000 );
+             System.out.println("El fumador "+ miIngrediente +" ha terminado de fumar.");
+
+         }
+    }
+
+}
+
+class Estanquero implements Runnable{
+
+    public Thread thr ;
+    public Estanco estanco;
+    String ingre;
+
+    public Estanquero( Estanco es ){
+
+        thr = new Thread(this);
+        estanco = es;
+
+    }
+
+    public void run(){
+        int ingrediente ;
+        while (true){
+
+            ingrediente = (int) (Math.random () * 3.0); // 0,1 o 2
+
+            if( ingrediente == 0)
+                ingre = "tabaco";
+            else if( ingrediente == 1)
+                ingre = "papel";
+            else if( ingrediente == 2)
+                ingre = "cerillas";
+
+            System.out.println("El estanquero ha producido " + ingre);
+            estanco.ponerIngrediente( ingrediente );
+            estanco.esperarRecogidaIngrediente() ;
+        }
+    }
+
+}
+
+class MainFumadores{
+
+    public static void main( String[] args ) {
+
+        final int N_FUMADORES = 3;
+
+        Fumador[] fumadores = new Fumador[N_FUMADORES];
+        Estanco estanco = new Estanco();
+        Estanquero estanquero = new Estanquero( estanco );
+
+        for( int i=0; i < N_FUMADORES; i++)
+            fumadores[i] = new Fumador( i, "El fumador "+i, estanco);
+
+
+
+        for( int i=0; i < N_FUMADORES; i++)
+            fumadores[i].thr.start();
+
+        estanquero.thr.start();
+
+    }
+
+
+
+
+}
