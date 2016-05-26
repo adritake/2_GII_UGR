@@ -1,0 +1,26 @@
+#!/bin/bash
+#PBS -N Practica1
+#PBS -q ac
+
+echo "*****EJERCICIO 7 *****"
+
+for ((N=1024;N<67108865;N=N*2))
+do
+	$PBS_O_WORKDIR/Ejercicio7 $N
+done
+
+
+echo "*****EJERCICIO 8 *****"
+
+for ((N=1024;N<67108865;N=N*2))
+do
+	$PBS_O_WORKDIR/Ejercicio8 $N
+done
+
+
+echo "*****LISTADO 1 *****"
+
+for ((N=1024;N<67108865;N=N*2))
+do
+	$PBS_O_WORKDIR/Listado1 $N
+done

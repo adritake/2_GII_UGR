@@ -1,0 +1,43 @@
+#!/bin/bash
+
+
+gcc -o schedule-clause schedule-clause.c -fopenmp
+gcc -o scheduled-clause schedule-clause.c -fopenmp
+gcc -o scheduleg-clause schedule-clause.c -fopenmp
+
+
+
+echo "********Ejecucion schedule-clause.c**********
+"
+
+
+
+./schedule-clause 1;
+./schedule-clause 2;
+./schedule-clause 4;
+
+
+
+
+
+
+echo "********Ejecucion scheduled-clause.c**********
+"
+
+
+./scheduled-clause 1 16;
+./scheduled-clause 2 16;
+./scheduled-clause 4 16;
+
+
+
+
+echo "********Ejecucion scheduleg-clause.c**********
+"
+
+./scheduleg-clause 1 16;
+./scheduleg-clause 2 16;
+./scheduleg-clause 4 16;
+
+
+

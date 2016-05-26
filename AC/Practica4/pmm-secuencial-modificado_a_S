@@ -1,0 +1,405 @@
+	.file	"pmm-secuencial-modificado_a.cpp"
+	.section	.text.unlikely,"ax",@progbits
+.LCOLDB1:
+	.text
+.LHOTB1:
+	.p2align 4,,15
+	.globl	_Z10MultiplicaPPdS0_S0_i
+	.type	_Z10MultiplicaPPdS0_S0_i, @function
+_Z10MultiplicaPPdS0_S0_i:
+.LFB823:
+	.cfi_startproc
+	testl	%ecx, %ecx
+	jle	.L11
+	leal	-1(%rcx), %eax
+	pxor	%xmm2, %xmm2
+	pushq	%r12
+	.cfi_def_cfa_offset 16
+	.cfi_offset 12, -16
+	movq	%rdi, %r12
+	pushq	%rbp
+	.cfi_def_cfa_offset 24
+	.cfi_offset 6, -24
+	leaq	8(,%rax,8), %rdi
+	pushq	%rbx
+	.cfi_def_cfa_offset 32
+	.cfi_offset 3, -32
+	movq	%rsi, %rbp
+	xorl	%ebx, %ebx
+	movq	%rdx, %rsi
+.L6:
+	movq	(%r12,%rbx,8), %r10
+	movq	0(%rbp,%rbx,8), %rdx
+	xorl	%r8d, %r8d
+	movq	256(%rbp,%rbx,8), %r11
+	.p2align 4,,10
+	.p2align 3
+.L4:
+	movapd	%xmm2, %xmm1
+	movq	$0, (%r10,%r8)
+	xorl	%eax, %eax
+	.p2align 4,,10
+	.p2align 3
+.L3:
+	movq	(%rsi,%rax,8), %r9
+	prefetcht0	(%r11)
+	movsd	(%r9,%r8), %xmm0
+	mulsd	(%rdx,%rax,8), %xmm0
+	addq	$1, %rax
+	cmpl	%eax, %ecx
+	addsd	%xmm0, %xmm1
+	movsd	%xmm1, (%r10,%r8)
+	jg	.L3
+	addq	$8, %r8
+	cmpq	%rdi, %r8
+	jne	.L4
+	addq	$1, %rbx
+	cmpl	%ebx, %ecx
+	jg	.L6
+	popq	%rbx
+	.cfi_restore 3
+	.cfi_def_cfa_offset 24
+	popq	%rbp
+	.cfi_restore 6
+	.cfi_def_cfa_offset 16
+	popq	%r12
+	.cfi_restore 12
+	.cfi_def_cfa_offset 8
+.L11:
+	rep ret
+	.cfi_endproc
+.LFE823:
+	.size	_Z10MultiplicaPPdS0_S0_i, .-_Z10MultiplicaPPdS0_S0_i
+	.section	.text.unlikely
+.LCOLDE1:
+	.text
+.LHOTE1:
+	.section	.rodata.str1.8,"aMS",@progbits,1
+	.align 8
+.LC2:
+	.string	"Falta tama\303\261o de matriz y vector\n"
+	.section	.rodata.str1.1,"aMS",@progbits,1
+.LC3:
+	.string	"\nMatriz B: \n"
+	.section	.rodata.str1.8
+	.align 8
+.LC4:
+	.string	"Error en la reserva de espacio para los vectores\n"
+	.section	.rodata.str1.1
+.LC5:
+	.string	"%f "
+.LC6:
+	.string	"\n"
+.LC7:
+	.string	"\nMatriz C: \n"
+.LC8:
+	.string	"\nMatriz solucion: \n"
+.LC10:
+	.string	"Tiempo= %f\n"
+	.section	.text.unlikely
+.LCOLDB11:
+	.section	.text.startup,"ax",@progbits
+.LHOTB11:
+	.p2align 4,,15
+	.globl	main
+	.type	main, @function
+main:
+.LFB824:
+	.cfi_startproc
+	pushq	%r15
+	.cfi_def_cfa_offset 16
+	.cfi_offset 15, -16
+	pushq	%r14
+	.cfi_def_cfa_offset 24
+	.cfi_offset 14, -24
+	pushq	%r13
+	.cfi_def_cfa_offset 32
+	.cfi_offset 13, -32
+	pushq	%r12
+	.cfi_def_cfa_offset 40
+	.cfi_offset 12, -40
+	pushq	%rbp
+	.cfi_def_cfa_offset 48
+	.cfi_offset 6, -48
+	pushq	%rbx
+	.cfi_def_cfa_offset 56
+	.cfi_offset 3, -56
+	subq	$24, %rsp
+	.cfi_def_cfa_offset 80
+	cmpl	$1, %edi
+	jle	.L40
+	movq	8(%rsi), %rdi
+	movl	$10, %edx
+	xorl	%esi, %esi
+	call	strtol
+	movl	%eax, %r14d
+	movq	%rax, %rbp
+	movl	%eax, %r13d
+	salq	$3, %r14
+	movl	%eax, %r12d
+	movq	%r14, %rdi
+	call	malloc
+	movq	%r14, %rdi
+	movq	%rax, %rbx
+	movq	%rax, A(%rip)
+	call	malloc
+	movq	%r14, %rdi
+	movq	%rax, B(%rip)
+	call	malloc
+	testl	%ebp, %ebp
+	movq	%rax, C(%rip)
+	je	.L15
+	leal	-1(%rbp), %r15d
+	movq	%rbx, %rbp
+	xorl	%ebx, %ebx
+	movl	%r15d, 12(%rsp)
+	salq	$3, %r15
+	jmp	.L16
+	.p2align 4,,10
+	.p2align 3
+.L41:
+	movq	A(%rip), %rbp
+	addq	$8, %rbx
+.L16:
+	movq	%r14, %rdi
+	call	malloc
+	movq	%rax, 0(%rbp,%rbx)
+	movq	%rbx, %rbp
+	addq	B(%rip), %rbp
+	movq	%r14, %rdi
+	call	malloc
+	movq	%r14, %rdi
+	movq	%rax, 0(%rbp)
+	movq	%rbx, %rbp
+	addq	C(%rip), %rbp
+	call	malloc
+	movq	%rax, 0(%rbp)
+	movq	B(%rip), %rsi
+	cmpq	$0, (%rsi,%rbx)
+	je	.L18
+	movq	C(%rip), %rdi
+	cmpq	$0, (%rdi,%rbx)
+	je	.L18
+	cmpq	%rbx, %r15
+	jne	.L41
+	xorl	%r8d, %r8d
+	.p2align 4,,10
+	.p2align 3
+.L23:
+	movq	(%rsi,%r8,8), %rcx
+	movq	(%rdi,%r8,8), %rdx
+	xorl	%eax, %eax
+	xorl	%ebx, %ebx
+	.p2align 4,,10
+	.p2align 3
+.L21:
+	pxor	%xmm0, %xmm0
+	addl	$1, %ebx
+	cvtsi2sd	%ebx, %xmm0
+	movsd	%xmm0, (%rcx,%rax)
+	movsd	%xmm0, (%rdx,%rax)
+	addq	$8, %rax
+	cmpl	%r13d, %ebx
+	jne	.L21
+	addq	$1, %r8
+	cmpl	%r8d, %r12d
+	ja	.L23
+	call	_ZNSt6chrono3_V212system_clock3nowEv
+	movq	C(%rip), %rdx
+	movq	B(%rip), %rsi
+	movl	%ebx, %ecx
+	movq	A(%rip), %rdi
+	movq	%rax, %r12
+	xorl	%r14d, %r14d
+	call	_Z10MultiplicaPPdS0_S0_i
+	call	_ZNSt6chrono3_V212system_clock3nowEv
+	movl	$.LC3, %esi
+	movq	%rax, %r13
+	movl	$1, %edi
+	xorl	%eax, %eax
+	call	__printf_chk
+	movl	12(%rsp), %eax
+	leaq	8(,%rax,8), %r15
+	.p2align 4,,10
+	.p2align 3
+.L17:
+	xorl	%ebx, %ebx
+	.p2align 4,,10
+	.p2align 3
+.L24:
+	movq	B(%rip), %rax
+	movl	$.LC5, %esi
+	movl	$1, %edi
+	movq	(%rax,%r14), %rax
+	movsd	(%rax,%rbx), %xmm0
+	movl	$1, %eax
+	addq	$8, %rbx
+	call	__printf_chk
+	cmpq	%rbx, %r15
+	jne	.L24
+	xorl	%eax, %eax
+	movl	$.LC6, %esi
+	movl	$1, %edi
+	addq	$8, %r14
+	call	__printf_chk
+	cmpq	%r15, %r14
+	jne	.L17
+	movl	$.LC7, %esi
+	movl	$1, %edi
+	xorl	%eax, %eax
+	call	__printf_chk
+	movl	12(%rsp), %eax
+	xorl	%r14d, %r14d
+	leaq	8(,%rax,8), %r15
+	.p2align 4,,10
+	.p2align 3
+.L26:
+	xorl	%ebx, %ebx
+	.p2align 4,,10
+	.p2align 3
+.L25:
+	movq	C(%rip), %rax
+	movl	$.LC5, %esi
+	movl	$1, %edi
+	movq	(%rax,%r14), %rax
+	movsd	(%rax,%rbx), %xmm0
+	movl	$1, %eax
+	addq	$8, %rbx
+	call	__printf_chk
+	cmpq	%rbx, %r15
+	jne	.L25
+	xorl	%eax, %eax
+	movl	$.LC6, %esi
+	movl	$1, %edi
+	addq	$8, %r14
+	call	__printf_chk
+	cmpq	%r15, %r14
+	jne	.L26
+	movl	$.LC8, %esi
+	movl	$1, %edi
+	xorl	%eax, %eax
+	call	__printf_chk
+	movl	12(%rsp), %ebp
+	leaq	8(,%rbp,8), %r14
+	xorl	%ebp, %ebp
+	.p2align 4,,10
+	.p2align 3
+.L28:
+	xorl	%ebx, %ebx
+	.p2align 4,,10
+	.p2align 3
+.L27:
+	movq	A(%rip), %rax
+	movl	$.LC5, %esi
+	movl	$1, %edi
+	movq	(%rax,%rbp), %rax
+	movsd	(%rax,%rbx), %xmm0
+	movl	$1, %eax
+	addq	$8, %rbx
+	call	__printf_chk
+	cmpq	%rbx, %r14
+	jne	.L27
+	xorl	%eax, %eax
+	movl	$.LC6, %esi
+	movl	$1, %edi
+	addq	$8, %rbp
+	call	__printf_chk
+	cmpq	%r14, %rbp
+	jne	.L28
+.L29:
+	pxor	%xmm0, %xmm0
+	subq	%r12, %r13
+	movl	$.LC10, %esi
+	movl	$1, %edi
+	movl	$1, %eax
+	cvtsi2sdq	%r13, %xmm0
+	divsd	.LC9(%rip), %xmm0
+	call	__printf_chk
+	addq	$24, %rsp
+	.cfi_remember_state
+	.cfi_def_cfa_offset 56
+	xorl	%eax, %eax
+	popq	%rbx
+	.cfi_def_cfa_offset 48
+	popq	%rbp
+	.cfi_def_cfa_offset 40
+	popq	%r12
+	.cfi_def_cfa_offset 32
+	popq	%r13
+	.cfi_def_cfa_offset 24
+	popq	%r14
+	.cfi_def_cfa_offset 16
+	popq	%r15
+	.cfi_def_cfa_offset 8
+	ret
+.L15:
+	.cfi_restore_state
+	call	_ZNSt6chrono3_V212system_clock3nowEv
+	movq	C(%rip), %rdx
+	movq	B(%rip), %rsi
+	xorl	%ecx, %ecx
+	movq	A(%rip), %rdi
+	movq	%rax, %r12
+	call	_Z10MultiplicaPPdS0_S0_i
+	call	_ZNSt6chrono3_V212system_clock3nowEv
+	movl	$.LC3, %esi
+	movq	%rax, %r13
+	movl	$1, %edi
+	xorl	%eax, %eax
+	call	__printf_chk
+	movl	$.LC7, %esi
+	movl	$1, %edi
+	xorl	%eax, %eax
+	call	__printf_chk
+	movl	$.LC8, %esi
+	movl	$1, %edi
+	xorl	%eax, %eax
+	call	__printf_chk
+	jmp	.L29
+.L18:
+	movl	$1, %edi
+	movl	$.LC4, %esi
+	xorl	%eax, %eax
+	call	__printf_chk
+	movl	$-2, %edi
+	call	exit
+.L40:
+	movl	$1, %edi
+	movl	$.LC2, %esi
+	xorl	%eax, %eax
+	call	__printf_chk
+	orl	$-1, %edi
+	call	exit
+	.cfi_endproc
+.LFE824:
+	.size	main, .-main
+	.section	.text.unlikely
+.LCOLDE11:
+	.section	.text.startup
+.LHOTE11:
+	.globl	C
+	.bss
+	.align 8
+	.type	C, @object
+	.size	C, 8
+C:
+	.zero	8
+	.globl	B
+	.align 8
+	.type	B, @object
+	.size	B, 8
+B:
+	.zero	8
+	.globl	A
+	.align 8
+	.type	A, @object
+	.size	A, 8
+A:
+	.zero	8
+	.section	.rodata.cst8,"aM",@progbits,8
+	.align 8
+.LC9:
+	.long	0
+	.long	1104006501
+	.ident	"GCC: (Ubuntu 5.3.1-14ubuntu2) 5.3.1 20160413"
+	.section	.note.GNU-stack,"",@progbits
